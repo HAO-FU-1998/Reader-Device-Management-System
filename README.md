@@ -1,2 +1,4 @@
-# Reader-Device-Management-System
- Course Design (2018)
+# Reader Device Management System
+## Tianjin University
+### Hao Fu
+#### 3016218083@tju.edu.cn
