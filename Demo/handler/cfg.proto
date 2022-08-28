@@ -1,0 +1,191 @@
+
+option optimize_for = LITE_RUNTIME;
+
+package cfg_msg;
+
+enum HeadType {
+    uhfGb = 0;
+    uhfHb = 1;
+    hbAntennaConfig = 2;
+    hbLlrp = 3;
+    comm = 4;
+    unKnownMsg = 50;
+  }
+
+ message MacConfigPara {
+    required int32 T1 = 1;
+    required int32 T2 = 2;
+    required int32 T4 = 3;
+  }
+
+  message UhfGbPara {
+    optional MacConfigPara macConfig = 1;
+  }
+
+  message ModePara {
+    required int32 bankIndex = 1;
+    required int32 accessMode = 2;
+    required bool plainFlag = 3;
+    required bool speedMode = 4;
+    required int32 readPtr = 5;
+    required int32 readLen = 6;
+  }
+
+  message TagFilterPara {
+    required bool repeatFlag = 1;
+    required int32 filterInterval = 2;
+  }
+
+  message UhfHbPara {
+    repeated ModePara workMode = 1;
+	optional TagFilterPara tagFilter=2;
+  }
+  
+  message DeviceEventNotificationSpecPara{
+    optional bool selectSpecEvent = 1;
+    optional bool antennaSpecEvent = 2;
+    optional bool antennaStateEvent = 3;
+  }
+
+  message AlarmConfigurationPara{
+    required int32 alarmMask = 1;
+    required int32 maxTemp = 2;
+    required int32 minTemp = 3;
+  }
+
+  message AntennaPara{
+    required int32 transmitPowerIndex = 1;
+    repeated int32 frequencyIndexes = 2;
+    required int32 forDataRateIndex = 3;
+	required int32 revDataRateIndex = 4;
+	required int32 forModulationIndex = 5;
+	required int32 revDataEncodingIndex = 6;
+  }
+
+  message AntennaConfigPara{
+    optional AntennaPara antenna1 = 1;
+	optional AntennaPara antenna2 = 2;
+	optional AntennaPara antenna3 = 3;
+	optional AntennaPara antenna4 = 4;
+  }
+  message ModuleDepthPara{
+    required int32 index = 1;
+  }
+  
+  message SelectReportSpecPara{
+    required int32 triggerType = 1;
+    required int32 nValue = 2;
+    required bool enableSelectSpecID = 3;
+	required bool enableSpecIndex = 4;
+	required bool enableRfSpecID = 5;
+	required bool enableAntennaID = 6;
+	required bool enablePeakRSSI = 7;
+	required bool enableFirstSeenTimestamp = 8;
+	required bool enableLastSeenTimestamp = 9;
+	required bool enableTagSeenCount = 10;
+	required bool enableAccessSpecID = 11;
+  }
+
+  message AccessReportSpecPara{
+    required int32 AccessReportTrigger = 1;
+  }
+  
+  message NetPara{
+    required int32 commMode = 1;
+    required bool isSSL = 2;
+    optional string clientAddress = 3;
+	optional int32 clientPort = 4;
+	optional int32 hostPort = 5;
+  }
+  
+  message SerialPara{
+    required int32 ifIndex = 1;
+    optional int32 attributeIndex = 2;
+    optional int32 srcAddr = 3;
+	optional int32 dstAddr = 4;
+  }
+  
+   message HttpPara{
+    required string serverUrl = 1;
+  }
+  
+  message KeepAlivePara{
+    required bool isOpen = 1;
+    required int32 period = 2;
+  }
+  message LinkPara{
+    required int32 linkType = 1;
+	optional NetPara net = 2;
+	optional SerialPara serial = 3;
+	optional HttpPara http = 4;
+	required KeepAlivePara keepAlive = 5;
+  }
+  
+  
+  message NtpPara{
+    required int32 period = 1;
+	repeated string ipAddr = 2;
+  }
+  
+  message Ipv4Para{
+    required int32 ifIndex = 1;
+	required string ipAddr = 2;
+	required string ipMask = 3;
+	required string gateWay = 4;
+	required string dns = 5;
+	required bool isDhcp = 6;
+  }
+  
+  message Ipv6Para{
+    required int32 ifIndex = 1;
+	required string ipAddr = 2;
+	required int32 ipMaskPrefixLen = 3;
+	required string gateWay = 4;
+	required string dns = 5;
+	required bool isDhcp = 6;
+  }
+  
+  message CommPara{
+    repeated LinkPara commLink = 1;
+	optional NtpPara ntp = 2;
+	repeated Ipv4Para ipv4 = 3;
+	repeated Ipv6Para ipv6 = 4;
+  }
+  message LlrpHbPara{
+    optional DeviceEventNotificationSpecPara deviceEventNotificationSpec = 1;
+    optional AlarmConfigurationPara alarmConfiguration = 2;
+    optional AntennaConfigPara antennaConfig = 3;
+	optional ModuleDepthPara moduleDepth = 4;
+	optional SelectReportSpecPara selectReportSpec = 5;
+    optional AccessReportSpecPara accessReportSpec = 6;
+    optional KeepAlivePara keepAlive = 7;
+  }
+
+
+message cfg_request {
+  required HeadType type = 1;
+  enum ActionType {
+    get = 0;
+    set = 1;
+    change = 2;
+    save = 3;
+  }
+  
+  required ActionType action = 2;
+  optional UhfGbPara uhfGb = 3;
+  optional UhfHbPara uhfHb = 4;
+  optional AntennaConfigPara antennaConfig = 5;
+  optional LlrpHbPara llrpHb = 6;
+  optional CommPara comm = 7;
+
+}
+
+message cfg_response {
+  required HeadType type = 1;
+  required int32 result = 2;
+  optional UhfGbPara uhfGb = 3;
+  optional UhfHbPara uhfHb = 4;
+  optional AntennaConfigPara antennaConfig = 5;
+  optional LlrpHbPara llrpHb = 6;
+  optional CommPara comm = 7;
+}

@@ -1,0 +1,112 @@
+
+option optimize_for = LITE_RUNTIME;
+
+package rdp_msg;
+
+message ReadPara{
+    required int32 opid =1;
+    required int32 mb = 2;
+    required int32 pointer = 3;
+    required int32 count = 4;
+  }
+  
+  message StopTriggerPara{
+    required int32 type = 1;
+    optional int32 duration = 2;
+    optional int32 cycle = 3;
+  }
+  
+  message ProtocalPara{
+    required int32 protocalType = 1;
+    required int32 codeType = 2;
+    required int32 forwardRate = 3;
+    required int32 reverseRate = 4;
+    repeated ReadPara read = 5;
+  }
+  
+  message AntPara{
+    required int32 antId = 1;
+    repeated int32 freq = 2;
+    required int32 power = 3;
+  }
+
+  message ConfigPara {
+    repeated AntPara antenna = 1;
+    repeated ProtocalPara protocal = 2;
+    optional StopTriggerPara stopTrigger = 3;
+  }
+
+message rdp_request {
+  enum HeadType {
+    startReaderWork = 0;
+    stopReaderWork = 1;
+    setConfig = 2;
+    getConfig = 3;
+  }
+
+  required HeadType type = 1;
+  optional ConfigPara config = 2;
+}
+
+message rdp_response {
+
+  enum HeadType {
+    reportTagData = 0;
+    startWorkAck = 1;
+    keepAlive = 2;
+    setConfigAck = 3;
+    getConfigAck = 4;
+    stopWorkAck = 5;
+    businessEndEvent = 6;
+    unknownMsg = 50;
+  }
+
+  required HeadType type = 1;
+  optional int32 status = 2;
+  
+  message ReadResultRara {
+    required int32 opid = 1;
+    required int32 result = 2;
+    optional bytes readData = 3;
+  }
+
+  message TagReportDataPara {
+    required int32 antId = 1;
+    optional int32 power = 2;
+    optional int32 freq = 3;
+    optional int32 protocalType = 4;
+	optional int32 rssi = 5;
+	optional int32 readerId = 6;
+	optional int32 tagCount = 7;
+	optional uint64 time = 8;
+	required bytes epc = 9;
+    repeated ReadResultRara readResult = 10;
+  }
+
+  
+  message TagReportDataMsg {
+    repeated TagReportDataPara tagData = 1;
+  }
+  
+  message KeepAliveMsg {
+    optional int32 readerId = 1;
+	optional uint64 time = 2;
+	optional int32 dtPlateTemperature = 3;
+	optional int32 rfPlateTemperature = 4;
+  }
+
+  
+  optional TagReportDataMsg tagReportData = 3;
+  optional KeepAliveMsg KeepAlive = 4;
+  optional ConfigPara config = 5;
+}
+
+
+
+
+
+
+
+
+
+
